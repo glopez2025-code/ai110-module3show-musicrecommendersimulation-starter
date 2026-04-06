@@ -2,32 +2,31 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+I built a simple content-based music recommender in Python. It takes a user's 
+preferences — like their favorite genre, mood, and energy level — and scores 
+every song in the catalog based on how close it is to those preferences. The 
+top scoring songs get returned as recommendations. I also added an artist 
+penalty to keep results diverse, and multiple ranking modes so you can 
+prioritize genre or energy differently.
 
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+Real world apps like Spotify look at your listening habits and what a song 
+sounds like to guess what you'll want to hear next. My version does something 
+similar but simpler — it takes what a user likes (genre, mood, energy, etc.) 
+and compares it to each song. Every song gets a score based on how close it 
+is to those preferences, then they get sorted and the best ones come out on top.
 
-Some prompts to answer:
+**Song attributes:** genre, mood, energy, tempo_bpm, valence, danceability, acousticness
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+**UserProfile stores:** preferred genre, preferred mood, target energy, target tempo
 
-You can include a simple diagram or bullet list if helpful.
+**Scoring:** each feature gets scored with 1 - |song_value - target_value|, 
+then weighted and added up. Closer to what the user wants = higher score.
+
+**Ranking:** sorted highest to lowest score, top results get recommended.
 
 ---
 
@@ -68,13 +67,20 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+- Tested 3 different user profiles: a hip-hop fan, an acoustic low-energy 
+  listener, and a high-tempo EDM listener — each returned very different results
+- Added an artist penalty so the same artist doesn't dominate the top 5
+- Tried genre-first and energy-first ranking modes and noticed genre-first 
+  pushed pop songs much higher for the hip-hop profile
+- EDM profile strongly favored synthwave songs when genre matched
 
 ---
+### Terminal Output Screenshots
+
+
+
+
+
 
 ## Limitations and Risks
 
@@ -203,9 +209,10 @@ Examples:
 
 ## 9. Personal Reflection
 
-A few sentences about what you learned:
-
-- What surprised you about how your system behaved
-- How did building this change how you think about real music recommenders
-- Where do you think human judgment still matters, even if the model seems "smart"
-
+Building this made it clear how much a recommender's output depends on what 
+you decide to weight. Just changing the genre weight completely shifted the 
+results. It also showed how easy it is for a system like this to create a 
+filter bubble — if someone only likes chill lofi, that's basically all they'll 
+ever see. Real apps like Spotify have the same problem at a much bigger scale, 
+and that's where human judgment still matters for things like introducing 
+variety or catching when the algorithm is being unfair.

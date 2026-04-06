@@ -19,32 +19,32 @@ def main() -> None:
 
     profiles = [
         (
-            "Hip-Hop Fan (Genre-First)",
+            "High Energy + Acoustic",
             {
                 "favorite_genre": "pop",
-                "favorite_mood": "energetic",
+                "favorite_mood": "happy",
                 "target_energy": 0.9,
-                "likes_acoustic": False,
-                "ranking_mode": "genre-first",
-            },
-        ),
-        (
-            "Acoustic Low-Energy Listener (Energy-First)",
-            {
-                "favorite_genre": "indie pop",
-                "favorite_mood": "relaxed",
-                "target_energy": 0.3,
                 "likes_acoustic": True,
-                "ranking_mode": "energy-first",
+                "ranking_mode": "default",
             },
         ),
         (
-            "High-Tempo EDM Listener (Default)",
+            "Mood-Energy Mismatch",
             {
-                "favorite_genre": "synthwave",
-                "favorite_mood": "upbeat",
+                "favorite_genre": "rock",
+                "favorite_mood": "chill",
                 "target_energy": 0.95,
                 "likes_acoustic": False,
+                "ranking_mode": "default",
+            },
+        ),
+        (
+            "Niche Genre Conflict",
+            {
+                "favorite_genre": "ambient",
+                "favorite_mood": "intense",
+                "target_energy": 0.1,
+                "likes_acoustic": True,
                 "ranking_mode": "default",
             },
         ),
@@ -67,7 +67,7 @@ def main() -> None:
         print()  # Blank line before label
         print(f"=== {label} ===")
         print()  # Blank line after label
-        print(tabulate(table_data, headers=["Rank", "Title", "Artist", "Score", "Reason"], tablefmt="grid"))
+        print(tabulate(table_data, headers=["Rank", "Title", "Artist", "Score", "Reason"], tablefmt="grid"), flush=True)
         print()  # Blank line after table
 
 
