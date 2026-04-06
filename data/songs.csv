@@ -1,21 +1,21 @@
-id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
-1,Sunrise City,Neon Echo,pop,happy,0.82,118,0.84,0.79,0.18
-2,Midnight Coding,LoRoom,lofi,chill,0.42,78,0.56,0.62,0.71
-3,Storm Runner,Voltline,rock,intense,0.91,152,0.48,0.66,0.10
-4,Library Rain,Paper Lanterns,lofi,chill,0.35,72,0.60,0.58,0.86
-5,Gym Hero,Max Pulse,pop,intense,0.93,132,0.77,0.88,0.05
-6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,0.28,60,0.65,0.41,0.92
-7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,0.37,90,0.71,0.54,0.89
-8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
-9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
-10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
-11,Thunder Road,Iron Pulse,rock,intense,0.88,140,0.44,0.70,0.12
-12,Blue Note,Velvet Horn,jazz,relaxed,0.45,95,0.72,0.55,0.83
-13,Ocean Drift,Glass Harbor,ambient,dreamy,0.25,65,0.68,0.38,0.90
-14,Synthetic Heart,Neon Echo,synthwave,upbeat,0.80,118,0.75,0.80,0.25
-15,Sunset Pedal,Paper Lanterns,lofi,chill,0.50,76,0.63,0.58,0.82
-16,Paper Wings,Indigo Parade,indie pop,hopeful,0.70,128,0.86,0.77,0.40
-17,Midnight Brass,Slow Stereo,jazz,moody,0.55,100,0.52,0.63,0.70
-18,Dawn Meadow,Orbit Bloom,ambient,calm,0.30,60,0.62,0.43,0.89
-19,Neon Streets,Voltline,rock,energetic,0.92,150,0.53,0.69,0.15
-20,Loft Study,LoRoom,lofi,focused,0.38,82,0.58,0.61,0.80
+id,title,artist,genre,mood,detailed_mood,energy,tempo_bpm,valence,danceability,danceability_tier,acousticness,popularity,release_decade,explicit
+1,Sunrise City,Neon Echo,pop,happy,bright,0.82,118,0.84,0.79,high,0.18,85,2010s,false
+2,Midnight Coding,LoRoom,lofi,chill,cozy,0.42,78,0.56,0.62,medium,0.71,62,2020s,false
+3,Storm Runner,Voltline,rock,intense,aggressive,0.91,152,0.48,0.66,high,0.10,78,2010s,true
+4,Library Rain,Paper Lanterns,lofi,chill,dreamy,0.35,72,0.60,0.58,medium,0.86,55,2020s,false
+5,Gym Hero,Max Pulse,pop,intense,pumped,0.93,132,0.77,0.88,high,0.05,80,2010s,true
+6,Spacewalk Thoughts,Orbit Bloom,ambient,chill,ethereal,0.28,60,0.65,0.41,low,0.92,70,2020s,false
+7,Coffee Shop Stories,Slow Stereo,jazz,relaxed,sultry,0.37,90,0.71,0.54,medium,0.89,65,2000s,false
+8,Night Drive Loop,Neon Echo,synthwave,moody,nostalgic,0.75,110,0.49,0.73,high,0.22,58,1980s,false
+9,Focus Flow,LoRoom,lofi,focused,steady,0.40,80,0.59,0.60,medium,0.78,60,2020s,false
+10,Rooftop Lights,Indigo Parade,indie pop,happy,bouncy,0.76,124,0.81,0.82,high,0.35,72,2010s,false
+11,Thunder Road,Iron Pulse,rock,intense,electric,0.88,140,0.44,0.70,high,0.12,68,1990s,true
+12,Blue Note,Velvet Horn,jazz,relaxed,smooth,0.45,95,0.72,0.55,medium,0.83,50,1970s,false
+13,Ocean Drift,Glass Harbor,ambient,dreamy,calming,0.25,65,0.68,0.38,low,0.90,45,2000s,false
+14,Synthetic Heart,Neon Echo,synthwave,upbeat,pulsing,0.80,118,0.75,0.80,high,0.25,74,1980s,true
+15,Sunset Pedal,Paper Lanterns,lofi,chill,laid-back,0.50,76,0.63,0.58,medium,0.82,58,2020s,false
+16,Paper Wings,Indigo Parade,indie pop,hopeful,airy,0.70,128,0.86,0.77,high,0.40,66,2010s,false
+17,Midnight Brass,Slow Stereo,jazz,moody,smoky,0.55,100,0.52,0.63,medium,0.70,52,1990s,false
+18,Dawn Meadow,Orbit Bloom,ambient,calm,serene,0.30,60,0.62,0.43,low,0.89,42,2000s,false
+19,Neon Streets,Voltline,rock,energetic,fiery,0.92,150,0.53,0.69,high,0.15,82,2010s,true
+20,Loft Study,LoRoom,lofi,focused,pensive,0.38,82,0.58,0.61,medium,0.80,60,2020s,false

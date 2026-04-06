@@ -18,6 +18,11 @@ class Song:
     valence: float
     danceability: float
     acousticness: float
+    detailed_mood: str = "neutral"
+    danceability_tier: str = "medium"
+    popularity: int = 50
+    release_decade: str = "2010s"
+    explicit: bool = False
 
 @dataclass
 class UserProfile:
@@ -29,6 +34,11 @@ class UserProfile:
     favorite_mood: str
     target_energy: float
     likes_acoustic: bool
+    target_popularity: Optional[int] = None
+    favorite_release_decade: Optional[str] = None
+    preferred_detailed_mood: Optional[str] = None
+    preferred_danceability_tier: Optional[str] = None
+    allow_explicit: Optional[bool] = None
 
 class Recommender:
     """
@@ -44,12 +54,7 @@ class Recommender:
             raise ValueError("No songs available for recommendation")
 
         song_dicts = [vars(song) for song in self.songs]
-        user_prefs = {
-            'favorite_genre': user.favorite_genre,
-            'favorite_mood': user.favorite_mood,
-            'target_energy': user.target_energy,
-            'likes_acoustic': user.likes_acoustic,
-        }
+        user_prefs = vars(user)
 
         ranked = recommend_songs(user_prefs, song_dicts, k=k)
         return [Song(**song_dict) for song_dict, _, _ in ranked]
@@ -84,11 +89,16 @@ def load_songs(csv_path: str) -> List[Dict]:
                     'artist': row['artist'],
                     'genre': row['genre'],
                     'mood': row['mood'],
+                    'detailed_mood': row['detailed_mood'],
                     'energy': float(row['energy']),
                     'tempo_bpm': float(row['tempo_bpm']),
                     'valence': float(row['valence']),
                     'danceability': float(row['danceability']),
+                    'danceability_tier': row['danceability_tier'],
                     'acousticness': float(row['acousticness']),
+                    'popularity': int(row['popularity']),
+                    'release_decade': row['release_decade'],
+                    'explicit': row['explicit'].strip().lower() == 'true',
                 })
             return songs
     except FileNotFoundError as exc:
@@ -104,13 +114,30 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5, ranking_mod
         raise ValueError("Songs list must not be empty")
 
     want_acoustic = 1.0 if user_prefs.get('likes_acoustic', False) else 0.0
+    target_popularity = user_prefs.get('target_popularity')
+    favorite_release_decade = user_prefs.get('favorite_release_decade')
+    preferred_detailed_mood = user_prefs.get('preferred_detailed_mood')
+    preferred_danceability_tier = user_prefs.get('preferred_danceability_tier')
+    allow_explicit = user_prefs.get('allow_explicit')
+
     scored_songs: List[Tuple[Dict, float, str]] = []
 
     for song in songs:
         genre_score = 1.0 if song.get('genre') == user_prefs.get('favorite_genre') else 0.0
         mood_score = 1.0 if song.get('mood') == user_prefs.get('favorite_mood') else 0.0
+        detailed_mood_score = 1.0 if (preferred_detailed_mood and song.get('detailed_mood') == preferred_detailed_mood) else 0.0
         energy_score = 1.0 - abs(song.get('energy', 0.0) - float(user_prefs.get('target_energy', 0.0)))
+        danceability_score = 1.0 if (preferred_danceability_tier and song.get('danceability_tier') == preferred_danceability_tier) else 0.0
         acoustic_score = 1.0 - abs(song.get('acousticness', 0.0) - want_acoustic)
+
+        popularity_score = 0.0
+        if target_popularity is not None:
+            popularity_score = 1.0 - abs(song.get('popularity', 50) / 100.0 - float(target_popularity) / 100.0)
+
+        release_decade_score = 1.0 if (favorite_release_decade and song.get('release_decade') == favorite_release_decade) else 0.0
+        explicit_score = 1.0
+        if allow_explicit is not None:
+            explicit_score = 1.0 if (allow_explicit or not song.get('explicit', False)) else 0.0
 
         # Adjust weights based on ranking mode
         if ranking_mode == "genre-first":
@@ -129,17 +156,54 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5, ranking_mod
             energy_weight = 0.25
             acoustic_weight = 0.2
 
+        popularity_weight = 0.1 if target_popularity is not None else 0.0
+        release_decade_weight = 0.1 if favorite_release_decade is not None else 0.0
+        detailed_mood_weight = 0.1 if preferred_detailed_mood is not None else 0.0
+        danceability_weight = 0.1 if preferred_danceability_tier is not None else 0.0
+        explicit_weight = 0.1 if allow_explicit is not None else 0.0
+
+        total_weight = (
+            genre_weight
+            + mood_weight
+            + energy_weight
+            + acoustic_weight
+            + popularity_weight
+            + release_decade_weight
+            + detailed_mood_weight
+            + danceability_weight
+            + explicit_weight
+        )
+
         score = (
             genre_weight * genre_score
             + mood_weight * mood_score
+            + detailed_mood_weight * detailed_mood_score
             + energy_weight * energy_score
+            + danceability_weight * danceability_score
             + acoustic_weight * acoustic_score
-        )
+            + popularity_weight * popularity_score
+            + release_decade_weight * release_decade_score
+            + explicit_weight * explicit_score
+        ) / total_weight
 
-        explanation = (
-            f"genre_match={genre_score:.1f}, mood_match={mood_score:.1f}, "
-            f"energy_closeness={energy_score:.2f}, acousticness_closeness={acoustic_score:.2f}"
-        )
+        explanation_parts = [
+            f"genre_match={genre_score:.1f}",
+            f"mood_match={mood_score:.1f}",
+            f"energy_closeness={energy_score:.2f}",
+            f"acousticness_closeness={acoustic_score:.2f}",
+        ]
+        if preferred_detailed_mood is not None:
+            explanation_parts.append(f"detailed_mood_match={detailed_mood_score:.1f}")
+        if preferred_danceability_tier is not None:
+            explanation_parts.append(f"danceability_tier_match={danceability_score:.1f}")
+        if target_popularity is not None:
+            explanation_parts.append(f"popularity_closeness={popularity_score:.2f}")
+        if favorite_release_decade is not None:
+            explanation_parts.append(f"release_decade_match={release_decade_score:.1f}")
+        if allow_explicit is not None:
+            explanation_parts.append(f"explicit_ok={explicit_score:.1f}")
+
+        explanation = ", ".join(explanation_parts)
         scored_songs.append((song, score, explanation))
 
     scored_songs.sort(key=lambda item: item[1], reverse=True)
